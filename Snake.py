@@ -4,20 +4,23 @@ import pygame
 SCREEN_WIDTH = round(1920 * 0.9)
 SCREEN_HEIGHT = round(1080 * 0.9)
 
+
 class fruit:
     def __init__(self):
         self.x = SCREEN_WIDTH/4
         self.y = SCREEN_HEIGHT/4
+        self.size = 40
 
     def draw(self, surface):
-        pygame.draw.rect(surface, (228, 0, 0), (self.x, self.y, 37, 37))
+        pygame.draw.rect(surface, (228, 0, 0), (self.x, self.y, self.size, self.size))
+
 
 class head:
     def __init__(self):
         self.x = SCREEN_WIDTH/2
         self.y = SCREEN_HEIGHT/2
         self.direction = None
-        self.size = 37
+        self.size = 40
 
     def handle_keys(self):
         key = pygame.key.get_pressed()
@@ -54,18 +57,26 @@ class head:
 
         pygame.draw.rect(surface, (0, 102, 0), (self.x, self.y, self.size, self.size))
 
+
 class body:
     pass
 
+
 def check_collision(snake, apple):
-    apple_rect = pygame.Rect(apple.x, apple.y, 37, 37)
-    snake_rect = pygame.Rect(snake.x, snake.y, 37, 37)
+    apple_rect = pygame.Rect(apple.x, apple.y, apple.size, apple.size)
+    snake_rect = pygame.Rect(snake.x, snake.y, snake.size, snake.size)
     return apple_rect.colliderect(snake_rect)
 
+
 def update_fps():
-	fps = str(int(clock.get_fps())) + ' fps'
-	fps_text = fps_font.render(fps, True, pygame.Color("coral"))
-	return fps_text
+    fps = str(int(clock.get_fps())) + ' fps'
+    fps_text = hud.render(fps, True, pygame.Color("coral"))
+    return fps_text
+
+def update_score():
+    score_text = f'Score: {score}'
+    rendered_score = hud.render(score_text, True, pygame.Color("coral"))
+    return rendered_score
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -73,10 +84,13 @@ pygame.display.set_caption("Snek")
 clock = pygame.time.Clock()
 running = True
 game_over = False
-fps_font = pygame.font.SysFont("Arial", 18)
-game_over_font = pygame.font.SysFont("Arial", 120)
+score = 0
+
 snake = head()
 apple = fruit()
+
+hud = pygame.font.SysFont("Arial", 18)
+game_over_font = pygame.font.SysFont("Arial", 120)
 
 while running:
     for event in pygame.event.get():
@@ -88,7 +102,8 @@ while running:
         snake.handle_keys()
 
         if check_collision(snake, apple):
-            apple.x, apple.y = random.randint(0,SCREEN_WIDTH-37), random.randint(0,SCREEN_HEIGHT-37)
+            score += 1
+            apple.x, apple.y = random.randint(0, SCREEN_WIDTH-apple.size), random.randint(0, SCREEN_HEIGHT-apple.size)
     else:
         game_over_text = game_over_font.render('Game over', True, pygame.Color("red"))
         game_over_text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
@@ -96,7 +111,8 @@ while running:
 
     apple.draw(screen)
     snake.draw(screen)
-    screen.blit(update_fps(), (10,0))
+    screen.blit(update_fps(), (10, 0))
+    screen.blit(update_score(), (10, 20))
     pygame.display.update()
 
     clock.tick(60)
