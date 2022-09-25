@@ -4,7 +4,6 @@ import pygame
 SCREEN_X = round(1920 * 0.9)
 SCREEN_Y = round(1080 * 0.9)
 
-
 class fruit:
     def __init__(self):
         self.x = SCREEN_X/4
@@ -34,7 +33,7 @@ class head:
             self.direction = None
 
     def draw(self, surface):
-        distance = 0.6
+        distance = 5
 
         if self.direction == None:
             pass
@@ -49,21 +48,25 @@ class head:
 
         pygame.draw.rect(surface, (0, 102, 0), (self.x, self.y, 37, 37))
 
-
 class body:
     pass
-
 
 def check_collision(snake, apple):
     apple_rect = pygame.Rect(apple.x, apple.y, 37, 37)
     snake_rect = pygame.Rect(snake.x, snake.y, 37, 37)
     return apple_rect.colliderect(snake_rect)
 
+def update_fps():
+	fps = str(int(clock.get_fps())) + ' fps'
+	fps_text = font.render(fps, 1, pygame.Color("coral"))
+	return fps_text
+
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_X, SCREEN_Y))
-pygame.display.set_caption("Snak")
+pygame.display.set_caption("Snek")
+clock = pygame.time.Clock()
 running = True
-
+font = pygame.font.SysFont("Arial", 18)
 snake = head()
 apple = fruit()
 
@@ -73,11 +76,16 @@ while running:
             running = False
 
     snake.handle_keys()
+
     screen.fill((255, 255, 255))
     apple.draw(screen)
     snake.draw(screen)
+    screen.blit(update_fps(), (10,0))
     pygame.display.update()
+
     if check_collision(snake, apple):
         apple.x, apple.y = random.randint(0,SCREEN_X-37), random.randint(0,SCREEN_Y-37)
+
+    clock.tick(60)
 
 pygame.quit()
