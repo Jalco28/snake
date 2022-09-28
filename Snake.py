@@ -4,6 +4,30 @@ import pygame
 SCREEN_WIDTH = round(1920 * 0.9)
 SCREEN_HEIGHT = round(1080 * 0.9)
 
+class QueueFullError(Exception):
+    pass
+
+class QueueEmptyError(Exception):
+    pass
+
+class queue:
+    def __init__(self):
+        self._queue = []
+
+    def __repr__(self):
+        return f'{self._queue}'
+
+    def isempty(self):
+        return True if len(self._queue) == 0 else False
+
+    def add(self, data):
+        self._queue.append(data)
+
+    def remove(self):
+        self._queue.pop[0]
+
+    def peek(self):
+        return self._queue[0]
 
 class fruit:
     def __init__(self):
@@ -15,12 +39,14 @@ class fruit:
         pygame.draw.rect(surface, (228, 0, 0), (self.x, self.y, self.size, self.size))
 
 
-class head:
+class body:
     def __init__(self):
         self.x = SCREEN_WIDTH/2
         self.y = SCREEN_HEIGHT/2
         self.direction = None
-        self.size = 40
+        self.width = 40
+        self.coords = queue()
+        self.length = 1
 
     def handle_keys(self):
         key = pygame.key.get_pressed()
@@ -51,16 +77,19 @@ class head:
         elif self.direction == 'RIGHT':
             self.x += distance
 
-        if (self.x < 0 or self.x > SCREEN_WIDTH-self.size) or (self.y < 0 or self.y > SCREEN_HEIGHT-self.size):
+        if (self.x < 0 or self.x > SCREEN_WIDTH-self.width) or (self.y < 0 or self.y > SCREEN_HEIGHT-self.width):
             game_over = True
             self.direction = None
 
-        pygame.draw.rect(surface, (0, 102, 0), (self.x, self.y, self.size, self.size))
+        rect = pygame.Rect(0, 0, self.width, self.width)
+        rect.center = self.x, self.y
+        pygame.draw.rect(surface, (0, 102, 0), (rect[0], rect[1], self.width, self.width))
+        pygame.draw.circle(surface, (0, 0, 255), rect.center, 4)
 
 
 def check_collision(snake, apple):
     apple_rect = pygame.Rect(apple.x, apple.y, apple.size, apple.size)
-    snake_rect = pygame.Rect(snake.x, snake.y, snake.size, snake.size)
+    snake_rect = pygame.Rect(snake.x, snake.y, snake.width, snake.width)
     return apple_rect.colliderect(snake_rect)
 
 def update_fps():
@@ -81,7 +110,7 @@ running = True
 game_over = False
 score = 0
 
-snake = head()
+snake = body()
 apple = fruit()
 
 hud = pygame.font.SysFont("Arial", 18)
