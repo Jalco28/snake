@@ -58,15 +58,10 @@ class head:
         pygame.draw.rect(surface, (0, 102, 0), (self.x, self.y, self.size, self.size))
 
 
-class body:
-    pass
-
-
 def check_collision(snake, apple):
     apple_rect = pygame.Rect(apple.x, apple.y, apple.size, apple.size)
     snake_rect = pygame.Rect(snake.x, snake.y, snake.size, snake.size)
     return apple_rect.colliderect(snake_rect)
-
 
 def update_fps():
     fps = str(int(clock.get_fps())) + ' fps'
