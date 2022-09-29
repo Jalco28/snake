@@ -1,8 +1,11 @@
+#   APPLE TOPLEFT spawns in center
 import random
 import pygame
 
 SCREEN_WIDTH = 30*55
 SCREEN_HEIGHT = 18*55
+MULTS = [i*55 for i in range(30)]
+
 
 class QueueFullError(Exception):
     pass
@@ -102,6 +105,19 @@ def update_score():
     rendered_score = hud.render(score_text, True, pygame.Color("coral"))
     return rendered_score
 
+def grid(x, y):
+    for num_idx, num in enumerate(MULTS):
+        if abs(num-x) < 55/2:
+            x = num
+            break
+
+    for num_idx, num in enumerate(MULTS):
+        if abs(num-y) < 55/2:
+            y = num
+            break
+
+    return x, y
+
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Snek")
@@ -148,7 +164,7 @@ while running:
 
         if check_collision(snake, apple):
             score += 1
-            apple.x, apple.y = random.randint(0, SCREEN_WIDTH-apple.size), random.randint(0, SCREEN_HEIGHT-apple.size)
+            apple.x, apple.y = grid(random.randint(0, SCREEN_WIDTH-apple.size), random.randint(0, SCREEN_HEIGHT-apple.size))
     else:
         game_over_text = game_over_font.render('Game over', True, pygame.Color("red"))
         game_over_text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
