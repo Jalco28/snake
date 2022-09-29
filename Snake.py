@@ -1,8 +1,8 @@
 import random
 import pygame
 
-SCREEN_WIDTH = round(1920 * 0.9)
-SCREEN_HEIGHT = round(1080 * 0.9)
+SCREEN_WIDTH = 30*55
+SCREEN_HEIGHT = 18*55
 
 class QueueFullError(Exception):
     pass
@@ -83,8 +83,8 @@ class body:
 
         rect = pygame.Rect(0, 0, self.width, self.width)
         rect.center = self.x, self.y
-        pygame.draw.rect(surface, (0, 102, 0), (rect[0], rect[1], self.width, self.width))
-        pygame.draw.circle(surface, (0, 0, 255), rect.center, 4)
+        pygame.draw.rect(surface, (40, 104, 222), rect)
+        pygame.draw.circle(surface, (0, 255, 0), rect.center, 4)
 
 
 def check_collision(snake, apple):
@@ -110,6 +110,27 @@ running = True
 game_over = False
 score = 0
 
+def draw_bg(surface):
+    bg_rect = pygame.Rect(0, 0, 55, 55)
+    for j in range(9):
+        for i in range(15):
+            pygame.draw.rect(surface, (167,217,72), bg_rect) # Light Green
+            bg_rect.centerx += 55
+            pygame.draw.rect(surface, (142,204,57), bg_rect) # Dark Green
+            bg_rect.centerx += 55
+
+        bg_rect.centerx = 55/2
+        bg_rect.centery += 55
+
+        for i in range(15):
+            pygame.draw.rect(surface, (142,204,57), bg_rect) # Dark Green
+            bg_rect.centerx += 55
+            pygame.draw.rect(surface, (167,217,72), bg_rect) # Light Green
+            bg_rect.centerx += 55
+
+        bg_rect.centerx = 55/2
+        bg_rect.centery += 55
+
 snake = body()
 apple = fruit()
 
@@ -121,7 +142,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill((255, 255, 255))
+    draw_bg(screen)
     if not game_over:
         snake.handle_keys()
 
