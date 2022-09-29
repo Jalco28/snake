@@ -34,8 +34,13 @@ class queue:
 
 class fruit:
     def __init__(self):
-        self.x = SCREEN_WIDTH/4
-        self.y = SCREEN_HEIGHT/4
+        x, y = grid(17*55, 8*55)
+        rect = pygame.Rect(0, 0, 40, 40)
+        rect.center = x, y
+        self.x, self.y = rect.topleft
+
+        # self.x = SCREEN_WIDTH/4
+        # self.y = SCREEN_HEIGHT/4
         self.size = 40
 
     def draw(self, surface):
@@ -44,8 +49,7 @@ class fruit:
 
 class body:
     def __init__(self):
-        self.x = SCREEN_WIDTH/2
-        self.y = SCREEN_HEIGHT/2
+        self.x, self.y = grid(9*55, 8*55)
         self.direction = None
         self.width = 40
         self.coords = queue()
@@ -116,7 +120,8 @@ def grid(x, y):
             y = num
             break
 
-    return x, y
+    rect = pygame.Rect(x, y, 55, 55)
+    return rect.centerx, rect.centery
 
 pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -164,7 +169,10 @@ while running:
 
         if check_collision(snake, apple):
             score += 1
-            apple.x, apple.y = grid(random.randint(0, SCREEN_WIDTH-apple.size), random.randint(0, SCREEN_HEIGHT-apple.size))
+            x, y = grid(random.randint(0, SCREEN_WIDTH-apple.size), random.randint(0, SCREEN_HEIGHT-apple.size))
+            rect = pygame.Rect(0, 0, 40, 40)
+            rect.center = x, y
+            apple.x, apple.y = rect.topleft
     else:
         game_over_text = game_over_font.render('Game over', True, pygame.Color("red"))
         game_over_text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
