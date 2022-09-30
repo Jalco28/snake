@@ -23,11 +23,13 @@ class queue:
     def isempty(self):
         return True if len(self._queue) == 0 else False
 
-    def add(self, data):
+    def enqueue(self, data):
         self._queue.append(data)
 
-    def remove(self):
+    def dequeue(self):
+        temp = self._queue[0]
         self._queue.pop[0]
+        return temp
 
     def peek(self):
         return self._queue[0]
@@ -52,22 +54,40 @@ class body:
         self.x, self.y = grid(9*55, 8*55)
         self.direction = None
         self.width = 40
-        self.coords = queue()
+        self.queue = queue()
         self.length = 1
 
     def handle_keys(self):
         key = pygame.key.get_pressed()
 
+        # if (key[ord('w')] or key[pygame.K_UP]) and self.direction != 'DOWN':
+        #     self.direction = 'UP'
+        # elif (key[ord('s')] or key[pygame.K_DOWN]) and self.direction != 'UP':
+        #     self.direction = 'DOWN'
+        # elif (key[ord('a')] or key[pygame.K_LEFT]) and self.direction != 'RIGHT':
+        #     self.direction = 'LEFT'
+        # elif (key[ord('d')] or key[pygame.K_RIGHT]) and self.direction != 'LEFT':
+        #     self.direction = 'RIGHT'
+        # elif key[pygame.K_SPACE]:
+        #     self.direction = None
+
         if (key[ord('w')] or key[pygame.K_UP]) and self.direction != 'DOWN':
-            self.direction = 'UP'
+            self.queue.enqueue('UP')
         elif (key[ord('s')] or key[pygame.K_DOWN]) and self.direction != 'UP':
-            self.direction = 'DOWN'
+            self.queue.enqueue('DOWN')
         elif (key[ord('a')] or key[pygame.K_LEFT]) and self.direction != 'RIGHT':
-            self.direction = 'LEFT'
+            self.queue.enqueue('LEFT')
         elif (key[ord('d')] or key[pygame.K_RIGHT]) and self.direction != 'LEFT':
-            self.direction = 'RIGHT'
+            self.queue.enqueue('RIGHT')
         elif key[pygame.K_SPACE]:
-            self.direction = None
+            self.queue.enqueue(None)
+
+    def handle_queue(self):
+        if not self.queue.isempty():
+            if self.x == grid(self.x) and self.y == grid(self.y):
+                command == self.queue.dequeue()
+                self.direction = command
+
 
     def draw(self, surface):
         global game_over
@@ -93,7 +113,7 @@ class body:
         rect = pygame.Rect(0, 0, self.width, self.width)
         rect.center = self.x, self.y
         pygame.draw.rect(surface, (40, 104, 222), rect)
-        pygame.draw.circle(surface, (0, 255, 0), rect.center, 4)
+        pygame.draw.circle(surface, (0, 255, 0), (self.x, self.y), 4)
 
 
 def check_collision(snake, apple):
