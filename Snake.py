@@ -1,4 +1,4 @@
-#   APPLE TOPLEFT spawns in center
+#   QUEUE DOEN'T CLEAR DUPLICATES, MISSING SOME KEY STROKES
 import random
 import pygame
 
@@ -6,9 +6,7 @@ SCREEN_WIDTH = 30*55
 SCREEN_HEIGHT = 18*55
 MULTS = [i*55 for i in range(30)]
 
-
-class QueueFullError(Exception):
-    pass
+state = 'up'
 
 class QueueEmptyError(Exception):
     pass
@@ -25,13 +23,19 @@ class queue:
 
     def enqueue(self, data):
         self._queue.append(data)
+        print(f'enqueue, {self._queue=}')
 
     def dequeue(self):
+        if self.isempty():
+            raise QueueEmptyError
         temp = self._queue[0]
-        self._queue.pop[0]
+        self._queue.pop(0)
+        print(f'dequeue, {self._queue=}')
         return temp
 
     def peek(self):
+        if self.isempty():
+            raise QueueEmptyError
         return self._queue[0]
 
 class fruit:
@@ -57,41 +61,54 @@ class body:
         self.queue = queue()
         self.length = 1
 
-    def handle_keys(self):
-        key = pygame.key.get_pressed()
+    # def handle_keys(self):
+    #     key = pygame.key.get_pressed()
 
-        # if (key[ord('w')] or key[pygame.K_UP]) and self.direction != 'DOWN':
-        #     self.direction = 'UP'
-        # elif (key[ord('s')] or key[pygame.K_DOWN]) and self.direction != 'UP':
-        #     self.direction = 'DOWN'
-        # elif (key[ord('a')] or key[pygame.K_LEFT]) and self.direction != 'RIGHT':
-        #     self.direction = 'LEFT'
-        # elif (key[ord('d')] or key[pygame.K_RIGHT]) and self.direction != 'LEFT':
-        #     self.direction = 'RIGHT'
-        # elif key[pygame.K_SPACE]:
-        #     self.direction = None
+    #     # if (key[ord('w')] or key[pygame.K_UP]) and self.direction != 'DOWN':
+    #     #     self.direction = 'UP'
+    #     # elif (key[ord('s')] or key[pygame.K_DOWN]) and self.direction != 'UP':
+    #     #     self.direction = 'DOWN'
+    #     # elif (key[ord('a')] or key[pygame.K_LEFT]) and self.direction != 'RIGHT':
+    #     #     self.direction = 'LEFT'
+    #     # elif (key[ord('d')] or key[pygame.K_RIGHT]) and self.direction != 'LEFT':
+    #     #     self.direction = 'RIGHT'
+    #     # elif key[pygame.K_SPACE]:
+    #     #     self.direction = None
 
-        if (key[ord('w')] or key[pygame.K_UP]) and self.direction != 'DOWN':
+    #     if (key[ord('w')] or key[pygame.K_UP]) and self.direction != 'DOWN':
+    #         self.queue.enqueue('UP')
+    #     elif (key[ord('s')] or key[pygame.K_DOWN]) and self.direction != 'UP':
+    #         self.queue.enqueue('DOWN')
+    #     elif (key[ord('a')] or key[pygame.K_LEFT]) and self.direction != 'RIGHT':
+    #         self.queue.enqueue('LEFT')
+    #     elif (key[ord('d')] or key[pygame.K_RIGHT]) and self.direction != 'LEFT':
+    #         self.queue.enqueue('RIGHT')
+    #     elif key[pygame.K_SPACE]:
+    #         self.queue.enqueue(None)
+
+    def move(self, key):
+        if (key == (ord('w') or pygame.K_UP)) and self.direction != 'DOWN':
             self.queue.enqueue('UP')
-        elif (key[ord('s')] or key[pygame.K_DOWN]) and self.direction != 'UP':
+        elif (key == (ord('s') or pygame.K_DOWN)) and self.direction != 'UP':
             self.queue.enqueue('DOWN')
-        elif (key[ord('a')] or key[pygame.K_LEFT]) and self.direction != 'RIGHT':
+        elif (key == (ord('a') or pygame.K_LEFT)) and self.direction != 'RIGHT':
             self.queue.enqueue('LEFT')
-        elif (key[ord('d')] or key[pygame.K_RIGHT]) and self.direction != 'LEFT':
+        elif (key == (ord('d') or pygame.K_RIGHT)) and self.direction != 'LEFT':
             self.queue.enqueue('RIGHT')
-        elif key[pygame.K_SPACE]:
+        elif key == pygame.K_SPACE:
             self.queue.enqueue(None)
 
     def handle_queue(self):
-        if not self.queue.isempty():
-            if self.x == grid(self.x) and self.y == grid(self.y):
-                command == self.queue.dequeue()
-                self.direction = command
+        if (not self.queue.isempty()) and ((self.x, self.y) == (grid(self.x, self.y)) ):
+                command = '_'
+                while command == self.direction:
+                    command = self.queue.dequeue()
 
+                self.direction = command
 
     def draw(self, surface):
         global game_over
-        distance = 5
+        distance = 1
 
         if self.direction == None:
             pass
@@ -146,6 +163,7 @@ def grid(x, y):
     return rect.centerx, rect.centery
 
 pygame.init()
+pygame.key.set_repeat()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Snek")
 clock = pygame.time.Clock()
@@ -184,10 +202,13 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            snake.move(event.key)
 
     draw_bg(screen)
     if not game_over:
-        snake.handle_keys()
+        # snake.handle_keys()
+        snake.handle_queue()
 
         if check_collision(snake, apple):
             score += 1
