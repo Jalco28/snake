@@ -84,7 +84,9 @@ class body:
         elif self.direction == 'RIGHT':
             self.x += distance
 
-        if (self.x < 0 or self.x > SCREEN_WIDTH-self.width) or (self.y < 0 or self.y > SCREEN_HEIGHT-self.width):
+        rect = pygame.Rect(0,0,self.width, self.width)
+        rect.center = self.x, self.y
+        if (rect.x < 0 or rect.x > SCREEN_WIDTH-self.width) or (rect.y < 0 or rect.y > SCREEN_HEIGHT-self.width):
             game_over = True
             self.direction = None
 
