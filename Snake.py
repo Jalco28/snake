@@ -1,4 +1,4 @@
-#   QUEUE DOEN'T CLEAR DUPLICATES, MISSING SOME KEY STROKES
+#   QUEUE DOESN'T CLEAR DUPLICATES, SNAKE HITS APPLE ABOVE AND LEFT
 import random
 import pygame
 
@@ -108,7 +108,7 @@ class body:
 
     def draw(self, surface):
         global game_over
-        distance = 1
+        distance = 5
 
         if self.direction == None:
             pass
