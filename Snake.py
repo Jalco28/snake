@@ -49,7 +49,6 @@ class fruit:
     def draw(self, surface):
         pygame.draw.rect(surface, (228, 0, 0), (self.x, self.y, self.size, self.size))
 
-
 class body:
     def __init__(self):
         self.x, self.y = grid(9*55, 8*55)
@@ -134,15 +133,6 @@ def grid(x, y):
     rect = pygame.Rect(x, y, 55, 55)
     return rect.centerx, rect.centery
 
-pygame.init()
-pygame.key.set_repeat()
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Snek")
-clock = pygame.time.Clock()
-running = True
-game_over = False
-score = 0
-
 def draw_bg(surface):
     bg_rect = pygame.Rect(0, 0, 55, 55)
     for j in range(9):
@@ -163,6 +153,15 @@ def draw_bg(surface):
 
         bg_rect.centerx = 55/2
         bg_rect.centery += 55
+
+pygame.init()
+pygame.key.set_repeat()
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Snek")
+clock = pygame.time.Clock()
+running = True
+game_over = False
+score = 0
 
 snake = body()
 apple = fruit()
