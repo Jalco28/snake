@@ -56,6 +56,8 @@ class body:
         self.width = 40
         self.queue = queue()
         self.length = 1
+        self.points = []
+        self.direction_map = {'UP': (0, self.width), 'DOWN': (0, -self.width), 'LEFT': (self.width, 0), 'RIGHT': (-self.width, 0)}
 
     def move(self, key):
         if (key == (ord('w') or pygame.K_UP)) and self.direction != 'DOWN':
@@ -76,6 +78,14 @@ class body:
                     command = self.queue.dequeue()
 
                 self.direction = command
+                try:
+                    if self.points[-1] != (self.x, self.y):
+                        self.points.append((self.x, self.y))
+                        print(self.points)
+                except IndexError:
+                    print('except')
+                    self.points.append((self.x, self.y))
+                    print(self.points)
 
     def draw(self, surface):
         global game_over
@@ -100,8 +110,15 @@ class body:
 
         rect = pygame.Rect(0, 0, self.width, self.width)
         rect.center = self.x, self.y
+
+        # Draw Head
         pygame.draw.rect(surface, (40, 104, 222), rect)
         pygame.draw.circle(surface, (0, 255, 0), (self.x, self.y), 4)
+
+        # Draw Body
+        for i in range(self.length-1):
+            rect.center = (sum(x) for i in zip(self.direction_map[],3) )       #OVER HERE
+            pygame.draw.rect(surface, (245, 141, 15), rect)
 
 
 def check_collision(snake, apple):
@@ -178,11 +195,11 @@ while running:
 
     draw_bg(screen)
     if not game_over:
-        # snake.handle_keys()
         snake.handle_queue()
 
         if check_collision(snake, apple):
             score += 1
+            snake.length += 1
             x, y = grid(random.randint(0, SCREEN_WIDTH-apple.size), random.randint(0, SCREEN_HEIGHT-apple.size))
             rect = pygame.Rect(0, 0, 40, 40)
             rect.center = x, y
