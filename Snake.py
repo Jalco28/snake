@@ -1,12 +1,9 @@
-#   QUEUE DOESN'T CLEAR DUPLICATES, SNAKE HITS APPLE ABOVE AND LEFT
 import random
 import pygame
 
 SCREEN_WIDTH = 30*55
 SCREEN_HEIGHT = 18*55
 MULTS = [i*55 for i in range(30)]
-
-state = 'up'
 
 class QueueEmptyError(Exception):
     pass
@@ -23,14 +20,14 @@ class queue:
 
     def enqueue(self, data):
         self._queue.append(data)
-        print(f'enqueue, {self._queue=}')
+        # print(f'enqueue, {self._queue=}')
 
     def dequeue(self):
         if self.isempty():
             raise QueueEmptyError
         temp = self._queue[0]
         self._queue.pop(0)
-        print(f'dequeue, {self._queue=}')
+        # print(f'dequeue, {self._queue=}')
         return temp
 
     def peek(self):
@@ -61,31 +58,6 @@ class body:
         self.queue = queue()
         self.length = 1
 
-    # def handle_keys(self):
-    #     key = pygame.key.get_pressed()
-
-    #     # if (key[ord('w')] or key[pygame.K_UP]) and self.direction != 'DOWN':
-    #     #     self.direction = 'UP'
-    #     # elif (key[ord('s')] or key[pygame.K_DOWN]) and self.direction != 'UP':
-    #     #     self.direction = 'DOWN'
-    #     # elif (key[ord('a')] or key[pygame.K_LEFT]) and self.direction != 'RIGHT':
-    #     #     self.direction = 'LEFT'
-    #     # elif (key[ord('d')] or key[pygame.K_RIGHT]) and self.direction != 'LEFT':
-    #     #     self.direction = 'RIGHT'
-    #     # elif key[pygame.K_SPACE]:
-    #     #     self.direction = None
-
-    #     if (key[ord('w')] or key[pygame.K_UP]) and self.direction != 'DOWN':
-    #         self.queue.enqueue('UP')
-    #     elif (key[ord('s')] or key[pygame.K_DOWN]) and self.direction != 'UP':
-    #         self.queue.enqueue('DOWN')
-    #     elif (key[ord('a')] or key[pygame.K_LEFT]) and self.direction != 'RIGHT':
-    #         self.queue.enqueue('LEFT')
-    #     elif (key[ord('d')] or key[pygame.K_RIGHT]) and self.direction != 'LEFT':
-    #         self.queue.enqueue('RIGHT')
-    #     elif key[pygame.K_SPACE]:
-    #         self.queue.enqueue(None)
-
     def move(self, key):
         if (key == (ord('w') or pygame.K_UP)) and self.direction != 'DOWN':
             self.queue.enqueue('UP')
@@ -99,7 +71,7 @@ class body:
             self.queue.enqueue(None)
 
     def handle_queue(self):
-        if (not self.queue.isempty()) and ((self.x, self.y) == (grid(self.x, self.y)) ):
+        if (not self.queue.isempty()) and ((self.x, self.y) == (grid(self.x, self.y))):
                 command = '_'
                 while command == self.direction:
                     command = self.queue.dequeue()
@@ -135,7 +107,7 @@ class body:
 
 def check_collision(snake, apple):
     apple_rect = pygame.Rect(apple.x, apple.y, apple.size, apple.size)
-    snake_rect = pygame.Rect(snake.x, snake.y, snake.width, snake.width)
+    snake_rect = pygame.Rect(snake.x-20, snake.y-20, snake.width, snake.width)
     return apple_rect.colliderect(snake_rect)
 
 def update_fps():
@@ -149,12 +121,12 @@ def update_score():
     return rendered_score
 
 def grid(x, y):
-    for num_idx, num in enumerate(MULTS):
+    for num in MULTS:
         if abs(num-x) < 55/2:
             x = num
             break
 
-    for num_idx, num in enumerate(MULTS):
+    for num in MULTS:
         if abs(num-y) < 55/2:
             y = num
             break
