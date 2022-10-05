@@ -73,11 +73,13 @@ class body:
 
     def handle_queue(self):
         if (not self.queue.isempty()) and ((self.x, self.y) == (grid(self.x, self.y))):
-                command = '_'
+                command = self.direction
+                
                 while command == self.direction:
                     command = self.queue.dequeue()
 
                 self.direction = command
+                    
                 try:
                     if self.points[-1] != (self.x, self.y):
                         self.points.append((self.x, self.y))
@@ -117,7 +119,7 @@ class body:
 
         # Draw Body
         for i in range(self.length-1):
-            rect.center = (sum(x) for i in zip(self.direction_map[],3) )       #OVER HERE
+            rect.center = tuple((sum(i) for i in zip(self.direction_map[self.direction],rect.center)))
             pygame.draw.rect(surface, (245, 141, 15), rect)
 
 
