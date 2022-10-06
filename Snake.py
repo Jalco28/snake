@@ -57,7 +57,7 @@ class body:
         self.queue = queue()
         self.length = 1
         self.points = []
-        self.direction_map = {'UP': (0, self.width), 'DOWN': (0, -self.width), 'LEFT': (self.width, 0), 'RIGHT': (-self.width, 0)}
+        self.direction_map = {'UP': (0, self.width), 'DOWN': (0, -self.width), 'LEFT': (self.width, 0), 'RIGHT': (-self.width, 0), None: (self.width, 0)}
 
     def move(self, key):
         if (key == (ord('w') or pygame.K_UP)) and self.direction != 'DOWN':
