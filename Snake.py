@@ -55,7 +55,7 @@ class body:
         self.direction = None
         self.width = 40
         self.queue = queue()
-        self.length = 1
+        self.length = 3
         self.points = []
         self.direction_map = {'UP': (0, self.width), 'DOWN': (0, -self.width), 'LEFT': (self.width, 0), 'RIGHT': (-self.width, 0), None: (self.width, 0)}
 
