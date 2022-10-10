@@ -82,15 +82,15 @@ class body:
                     
                 try:
                     if self.points[-1] != (self.x, self.y):
-                        self.points.append((self.x, self.y))
+                        self.points.append([self.x, self.y])
                         print(self.points)
                 except IndexError:
                     print('except')
-                    self.points.append((self.x, self.y))
-                    print(self.points)
+                    self.points.append([self.x, self.y])
 
     def draw(self, surface):
         global game_over
+        self.points.append([self.x, self.y])
         distance = 5
 
         if self.direction == None:
@@ -118,9 +118,37 @@ class body:
         pygame.draw.circle(surface, (0, 255, 0), (self.x, self.y), 4)
 
         # Draw Body
-        for i in range(self.length-1):
-            rect.center = tuple((sum(i) for i in zip(self.direction_map[self.direction],rect.center)))
-            pygame.draw.rect(surface, (245, 141, 15), rect)
+#         for i in range(self.length-1):
+#             rect.center = tuple((sum(i) for i in zip(self.direction_map[self.direction],rect.center)))
+#             pygame.draw.rect(surface, (245, 141, 15), rect)
+        print(self.points)
+        if len(self.points) >= 2:
+#             if self.points[0] == self.points[1]:
+#                 self.points.pop(0)
+            counter = 0
+            for idx, item in enumerate(self.points[::-1]):
+                try:
+                    dist = find_distance(item, self.points[idx+1])
+                except IndexError:
+                    break
+                if counter + dist < 55*self.length:
+                    counter += dist
+                else:
+                    for i in range(-idx, -1):
+                        self.points.pop(i)                     #SOMETHING OVER HERE
+            
+            if self.points[0][0] > self.points[1][0]:
+                self.points[0][0] -= distance
+            elif self.points[0][0] < self.points[1][0]:
+                self.points[0][0] += distance
+            
+            if self.points[0][1] > self.points[1][1]:
+                self.points[0][1] -= distance
+            elif self.points[0][1] < self.points[1][1]:
+                self.points[0][1] += distance
+                
+            pygame.draw.lines(surface, (245, 141, 15), False, self.points, width=3)                
+        self.points.pop(-1)
 
 
 def check_collision(snake, apple):
@@ -173,6 +201,11 @@ def draw_bg(surface):
         bg_rect.centerx = 55/2
         bg_rect.centery += 55
 
+def find_distance(x,y):
+    if x[0] == y[0]:
+        return abs(x[1]-y[1])
+    else:
+        return abs(x[0]-y[1])
 pygame.init()
 pygame.key.set_repeat()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
