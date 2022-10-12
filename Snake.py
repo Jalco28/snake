@@ -221,6 +221,7 @@ apple = fruit()
 
 hud = pygame.font.SysFont("Arial", 18)
 game_over_font = pygame.font.SysFont("Arial", 120)
+game_over_font_2 = pygame.font.SysFont("Arial", 60)
 
 while running:
     for event in pygame.event.get():
@@ -243,7 +244,10 @@ while running:
     else:
         game_over_text = game_over_font.render('Game over', True, pygame.Color("red"))
         game_over_text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
+        game_over_text_2 = game_over_font_2.render(f'Score: {score}', True, pygame.Color("red"))
+        game_over_text_rect_2 = game_over_text.get_rect(center=(SCREEN_WIDTH/2+150, SCREEN_HEIGHT/2+120))
         screen.blit(game_over_text, game_over_text_rect)
+        screen.blit(game_over_text_2, game_over_text_rect_2)
 
     apple.draw(screen)
     snake.draw(screen)
