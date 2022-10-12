@@ -124,6 +124,8 @@ class body:
                     dist = find_distance(item, nextp)
                 except IndexError:
                     break
+                if item == nextp:
+                    continue
                 if counter + dist <= 55*self.length and dist != 0:
                     counter += dist
                     pygame.draw.line(surface, (245, 141, 15), item, nextp, 40)
@@ -132,14 +134,14 @@ class body:
                         if item[1] < nextp[1]:
                             finalp = [item[0], item[1]+((self.length*55)-counter)]
                             pygame.draw.line(surface, (245,141, 15), item, finalp, 40)
-                        else:
+                        elif item[1] > nextp[1]:
                             finalp = [item[0], item[1]-((self.length*55)-counter)]
                             pygame.draw.line(surface, (245,141, 15), item, finalp, 40)
                     else:
                         if item[0] < nextp[0]:
                             finalp = [item[0]+((self.length*55)-counter), item[1]]
                             pygame.draw.line(surface, (245,141, 15), item, finalp, 40)
-                        else:
+                        elif item[0] > nextp[0]:
                             finalp = [item[0]-((self.length*55)-counter), item[1]]
                             pygame.draw.line(surface, (245,141, 15), item, finalp, 40)
                     break
