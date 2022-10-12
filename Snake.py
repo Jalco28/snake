@@ -59,7 +59,7 @@ class body:
         self.points = []
         self.direction_map = {'UP': (0, self.width), 'DOWN': (0, -self.width), 'LEFT': (self.width, 0), 'RIGHT': (-self.width, 0), None: (self.width, 0)}
 
-    def move(self, key):
+    def handle_keys(self, key):
         if (key == ord('w') or key == pygame.K_UP) and self.direction != 'DOWN':
             self.queue.enqueue('UP')
         elif (key == ord('s') or key == pygame.K_DOWN) and self.direction != 'UP':
@@ -70,6 +70,27 @@ class body:
             self.queue.enqueue('RIGHT')
         elif key == pygame.K_SPACE:
             self.queue.enqueue(None)
+
+    def move(self, surface):
+        global game_over
+        distance = 5
+
+        if self.direction == None:
+            pass
+        elif self.direction == 'UP':
+            self.y -= distance
+        elif self.direction == 'DOWN':
+            self.y += distance
+        elif self.direction == 'LEFT':
+            self.x -= distance
+        elif self.direction == 'RIGHT':
+            self.x += distance
+
+        rect = pygame.Rect(self.x, self.y, self.width, self.width)
+        for x in range(rect.left, rect.right):
+            for y in range(rect.top, rect.bottom):
+                if surface.get_at((x, y))[:3] == (245,141, 15):                 #Fix color detection
+                    game_over = True
 
     def handle_queue(self):
         if (not self.queue.isempty()) and ((self.x, self.y) == (grid(self.x, self.y))):
@@ -93,18 +114,6 @@ class body:
     def draw(self, surface):
         global game_over
         self.points.insert(0,[self.x, self.y])
-        distance = 5
-
-        if self.direction == None:
-            pass
-        elif self.direction == 'UP':
-            self.y -= distance
-        elif self.direction == 'DOWN':
-            self.y += distance
-        elif self.direction == 'LEFT':
-            self.x -= distance
-        elif self.direction == 'RIGHT':
-            self.x += distance
 
         rect = pygame.Rect(0,0,self.width, self.width)
         rect.center = self.x, self.y
@@ -230,11 +239,12 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
-            snake.move(event.key)
+            snake.handle_keys(event.key)
 
+    snake.handle_queue()
+    snake.move(screen)
     draw_bg(screen)
     if not game_over:
-        snake.handle_queue()
 
         if check_collision(snake, apple):
             score += 1
