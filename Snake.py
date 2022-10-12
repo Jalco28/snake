@@ -1,3 +1,4 @@
+#Stop apple spawning under tail
 import random
 import pygame
 
@@ -258,7 +259,11 @@ while running:
             rect = pygame.Rect(0, 0, 40, 40)
             rect.center = x, y
             apple.x, apple.y = rect.topleft
+        apple.draw(screen)
+        snake.draw(screen)
     else:
+        apple.draw(screen)
+        snake.draw(screen)
         game_over_text = game_over_font.render('Game over', True, pygame.Color("red"))
         game_over_text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT/2))
         game_over_text_2 = game_over_font_2.render(f'Score: {score}', True, pygame.Color("red"))
@@ -266,8 +271,7 @@ while running:
         screen.blit(game_over_text, game_over_text_rect)
         screen.blit(game_over_text_2, game_over_text_rect_2)
 
-    apple.draw(screen)
-    snake.draw(screen)
+
     screen.blit(update_fps(), (10, 0))
     screen.blit(update_score(), (10, 20))
     pygame.display.update()
