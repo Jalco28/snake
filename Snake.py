@@ -21,14 +21,12 @@ class queue:
 
     def enqueue(self, data):
         self._queue.append(data)
-        # print(f'enqueue, {self._queue=}')
 
     def dequeue(self):
         if self.isempty():
             raise QueueEmptyError
         temp = self._queue[0]
         self._queue.pop(0)
-        # print(f'dequeue, {self._queue=}')
         return temp
 
     def peek(self):
@@ -114,7 +112,6 @@ class body:
                     if self.points[-1] != (self.x, self.y):
                         self.points.insert(0,[self.x, self.y])
                 except IndexError:
-                    print('except')
                     self.points.insert(0,[self.x, self.y])
 
     def draw(self, surface):
