@@ -86,11 +86,16 @@ class body:
         elif self.direction == 'RIGHT':
             self.x += distance
 
-        rect = pygame.Rect(self.x, self.y, self.width, self.width)
+        rect = pygame.Rect(0, 0, self.width, self.width)
+        rect.center = (self.x, self.y)
         for x in range(rect.left, rect.right):
             for y in range(rect.top, rect.bottom):
-                if surface.get_at((x, y))[:3] == (245,141, 15):                 #Fix color detection
-                    game_over = True
+                try:
+                    if surface.get_at((x, y))[:3] == (245,141, 15):
+                        game_over = True
+                        self.direction = None
+                except IndexError:
+                    pass
 
     def handle_queue(self):
         if (not self.queue.isempty()) and ((self.x, self.y) == (grid(self.x, self.y))):
@@ -137,22 +142,22 @@ class body:
                     continue
                 if counter + dist <= 55*self.length and dist != 0:
                     counter += dist
-                    pygame.draw.line(surface, (245, 141, 15), item, nextp, 40)
+                    pygame.draw.line(surface, (245, 141, 15), (item[0]-1, item[1]-1), (nextp[0]-1, nextp[1]-1), 40)
                 else:
                     if item[0] == nextp[0]:
                         if item[1] < nextp[1]:
                             finalp = [item[0], item[1]+((self.length*55)-counter)]
-                            pygame.draw.line(surface, (245,141, 15), item, finalp, 40)
+                            pygame.draw.line(surface, (245,141, 15), (item[0]-1, item[1]-1), (finalp[0]-1, finalp[1]-1), 40)
                         elif item[1] > nextp[1]:
                             finalp = [item[0], item[1]-((self.length*55)-counter)]
-                            pygame.draw.line(surface, (245,141, 15), item, finalp, 40)
+                            pygame.draw.line(surface, (245,141, 15), (item[0]-1, item[1]-1), (finalp[0]-1, finalp[1]-1), 40)
                     else:
                         if item[0] < nextp[0]:
                             finalp = [item[0]+((self.length*55)-counter), item[1]]
-                            pygame.draw.line(surface, (245,141, 15), item, finalp, 40)
+                            pygame.draw.line(surface, (245,141, 15), (item[0]-1, item[1]-1), (finalp[0]-1, finalp[1]-1), 40)
                         elif item[0] > nextp[0]:
                             finalp = [item[0]-((self.length*55)-counter), item[1]]
-                            pygame.draw.line(surface, (245,141, 15), item, finalp, 40)
+                            pygame.draw.line(surface, (245,141, 15), (item[0]-1, item[1]-1), (finalp[0]-1, finalp[1]-1), 40)
                     break
         self.points.pop(0)
 
