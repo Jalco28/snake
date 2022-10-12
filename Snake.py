@@ -60,13 +60,13 @@ class body:
         self.direction_map = {'UP': (0, self.width), 'DOWN': (0, -self.width), 'LEFT': (self.width, 0), 'RIGHT': (-self.width, 0), None: (self.width, 0)}
 
     def move(self, key):
-        if (key == (ord('w') or pygame.K_UP)) and self.direction != 'DOWN':
+        if (key == ord('w') or key == pygame.K_UP) and self.direction != 'DOWN':
             self.queue.enqueue('UP')
-        elif (key == (ord('s') or pygame.K_DOWN)) and self.direction != 'UP':
+        elif (key == ord('s') or key == pygame.K_DOWN) and self.direction != 'UP':
             self.queue.enqueue('DOWN')
-        elif (key == (ord('a') or pygame.K_LEFT)) and self.direction != 'RIGHT':
+        elif (key == ord('a') or key == pygame.K_LEFT) and self.direction != 'RIGHT':
             self.queue.enqueue('LEFT')
-        elif (key == (ord('d') or pygame.K_RIGHT)) and self.direction != 'LEFT':
+        elif (key == ord('d') or key == pygame.K_RIGHT) and self.direction != 'LEFT':
             self.queue.enqueue('RIGHT')
         elif key == pygame.K_SPACE:
             self.queue.enqueue(None)
