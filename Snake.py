@@ -229,6 +229,7 @@ clock = pygame.time.Clock()
 running = True
 game_over = False
 score = 0
+fps = 60
 
 snake = body()
 apple = fruit()
@@ -243,7 +244,8 @@ while running:
             running = False
         if event.type == pygame.KEYDOWN:
             snake.handle_keys(event.key)
-
+        if event.type == pygame.MOUSEWHEEL:
+            fps += event.y
     snake.handle_queue()
     snake.move(screen)
     draw_bg(screen)
@@ -273,6 +275,6 @@ while running:
     screen.blit(update_score(), (10, 20))
     pygame.display.update()
 
-    clock.tick(60)
+    clock.tick(fps)
 
 pygame.quit()
