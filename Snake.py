@@ -221,6 +221,7 @@ def find_distance(x,y):
         return abs(x[1]-y[1])
     else:
         return abs(x[0]-y[0])
+
 pygame.init()
 pygame.key.set_repeat()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -248,19 +249,22 @@ while running:
             fps += event.y
     snake.handle_queue()
     snake.move(screen)
-    draw_bg(screen)
     if not game_over:
 
         if check_collision(snake, apple):
             score += 1
             snake.length += 1
             x, y = grid(random.randint(0, SCREEN_WIDTH-apple.size), random.randint(0, SCREEN_HEIGHT-apple.size))
+            while screen.get_at((x,y))[:3] == (245, 141, 15):
+                x, y = grid(random.randint(0, SCREEN_WIDTH-apple.size), random.randint(0, SCREEN_HEIGHT-apple.size))
             rect = pygame.Rect(0, 0, 40, 40)
             rect.center = x, y
             apple.x, apple.y = rect.topleft
+        draw_bg(screen)
         apple.draw(screen)
         snake.draw(screen)
     else:
+        draw_bg(screen)
         apple.draw(screen)
         snake.draw(screen)
         game_over_text = game_over_font.render('Game over', True, pygame.Color("red"))
