@@ -1,4 +1,3 @@
-#Stop apple spawning under tail
 import random
 import pygame
 
@@ -41,8 +40,6 @@ class fruit:
         rect.center = x, y
         self.x, self.y = rect.topleft
 
-        # self.x = SCREEN_WIDTH/4
-        # self.y = SCREEN_HEIGHT/4
         self.size = 40
 
     def draw(self, surface):
@@ -246,7 +243,7 @@ while running:
         if event.type == pygame.KEYDOWN:
             snake.handle_keys(event.key)
         if event.type == pygame.MOUSEWHEEL:
-            fps += event.y
+            fps += event.y*2
     snake.handle_queue()
     snake.move(screen)
     if not game_over:
